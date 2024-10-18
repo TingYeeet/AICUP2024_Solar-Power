@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Load the dataset
-file_path = 'L1_Train.csv'  # Ensure the file is in the correct directory
+file_path = './dataset/L1_Train.csv'  # Ensure the file is in the correct directory
 df = pd.read_csv(file_path)
 
 # Convert DateTime to datetime format

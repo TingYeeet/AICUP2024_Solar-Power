@@ -1,8 +1,8 @@
 import pandas as pd
 
 # 讀取兩個資料集
-df1 = pd.read_csv('L1_Train.csv')
-df2 = pd.read_csv('L2_Train.csv')
+df1 = pd.read_csv('./dataset/L1_Train.csv')
+df2 = pd.read_csv('./dataset/L2_Train.csv')
 
 # 將 DateTime 欄位轉換為 datetime 格式
 df1['DateTime'] = pd.to_datetime(df1['DateTime'])
