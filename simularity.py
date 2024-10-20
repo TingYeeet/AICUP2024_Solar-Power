@@ -1,16 +1,28 @@
 import pandas as pd
-from scipy.spatial.distance import euclidean
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics.pairwise import cosine_similarity
-from fastdtw import fastdtw
 import numpy as np
 import csv
 
 # 開啟結果文件
-result = open('./simularity_drop sec.csv', mode='w', newline='')
+result = open('./simularity_with_weight.csv', mode='w', newline='')
 writer = csv.writer(result)
-writer.writerow(['data a', 'data b', 'pearson_corr', 'cosine_sim', 'rmse', 'data_len'])
+writer.writerow(['data a', 'data b', 'pearson_corr', 'cosine_sim', 'rmse', 'data_len', 'weight'])
 
+# 儲存每個資料集的基準長度
+base_lengths = {}
+
+# 先計算每個資料集自己的基準長度
+for i in range(1, 18):
+    df1 = pd.read_csv('./dataset/L' + str(i) + '_Train.csv')
+    
+    # 轉換 DateTime 格式，並將時間精確到分鐘，忽略秒數
+    df1['DateTime'] = pd.to_datetime(df1['DateTime']).dt.floor('min')
+    
+    # 計算自己與自己的共通長度作為基準
+    base_lengths[i] = len(df1)
+
+# 進行兩兩資料集的比較
 for i in range(1, 18):
     df1 = pd.read_csv('./dataset/L' + str(i) + '_Train.csv')
 
@@ -38,6 +50,12 @@ for i in range(1, 18):
             print(f"Not enough data for comparison between L{i} and L{j}, skipping...")
             continue
 
+        # 計算基準長度
+        base_length = base_lengths[i]
+
+        # 計算共通資料長度的權重
+        weight = len(power_L1) / base_length if base_length > 0 else 0
+
         # 1. Pearson Correlation
         pearson_corr = power_L1.corr(power_L2, method='pearson')
 
@@ -47,12 +65,9 @@ for i in range(1, 18):
         # 3. Cosine Similarity
         cosine_sim = cosine_similarity([power_L1], [power_L2])[0][0]
 
-        # 4. Euclidean Distance (如果需要的話)
-        # euclidean_dist = euclidean(power_L1, power_L2)
-
-        # 寫入結果
-        writer.writerow([str(i), str(j), pearson_corr, cosine_sim, rmse, power_L1.shape[0]])
-        print(f"Written comparison: L{i} vs L{j}")
+        # 寫入結果，包括權重
+        writer.writerow([str(i), str(j), pearson_corr, cosine_sim, rmse, power_L1.shape[0], weight])
+        print(f"Written comparison: L{i} vs L{j}, weight: {weight}")
 
 # 關閉結果文件
 result.close()
