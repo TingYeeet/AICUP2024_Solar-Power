@@ -22,9 +22,8 @@ Z = linkage(X, method='ward')
 
 # 繪製樹狀圖
 plt.figure(figsize=(10, 7))
-dendrogram(Z, labels=range(1, 18), leaf_rotation=90, leaf_font_size=10, color_threshold=0.0)
+dendrogram(Z, labels=range(1, 18), leaf_font_size=10, color_threshold=0.0)
 plt.title('Hierarchical Clustering Dendrogram')
 plt.xlabel('Location')
-plt.xticks(rotation=0, ha='right')
 plt.ylabel('Distance')
 plt.savefig('./fig/clustering result/Hierarchical clustering result.png')
