@@ -3,7 +3,7 @@
 intercection/simu.py
 1. 找出有缺值的日期
 2. 和同月其它日算相似度(排除缺值超過半天的)
-3. 取最像的作為補值目標，存成圖片
+3. 取最像的作為補值目標，存成圖片 => intercection/simular date plot
 -----------------------------------------------------------
 intercection/fill by simu.py
 
